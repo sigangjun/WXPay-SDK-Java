@@ -36,12 +36,18 @@ public interface WXPayConfig {
      */
     public InputStream getCertStream();
 
+    /**
+     * HTTP(S) 连接超时时间，单位毫秒
+     *
+     * @return
+     */
+    public int getHttpConnectTimeoutMs();
 
     /**
-     * HTTP(S)请求超时时间，单位毫秒
+     * HTTP(S) 读数据超时时间，单位毫秒
      *
-     * @return 超时时间
+     * @return
      */
-    public int getTimeOutMs();
+    public int getHttpReadTimeoutMs();
 
 }

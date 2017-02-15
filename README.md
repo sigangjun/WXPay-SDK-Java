@@ -3,7 +3,7 @@
 
 对[微信支付开发者文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)中给出的API进行了封装。
 
-com.qq.weixin.pay.WXPay类下提供了对应的方法：
+com.github.wxpay.sdk.WXPay类下提供了对应的方法：
 
 |方法名 | 说明 |
 |--------|--------|
@@ -20,7 +20,8 @@ com.qq.weixin.pay.WXPay类下提供了对应的方法：
 |authCodeToOpenid|授权码查询openid|
 
 参数为`Map<String, String>`对象，返回类型也是`Map<String, String>`。
-方法内部会将参数会转换成含有`appid`、`mch_id`、`nonce_str`和`sign`的XML；
+
+方法内部会将参数会转换成含有`appid`、`mch_id`、`nonce_str`和`sign`的XML；默认使用MD5进行签名；
 通过HTTPS请求得到返回数据后会对其做必要的处理（例如验证签名，签名错误则抛出异常）。
 
 对于downloadBill，无论是否成功都返回Map，且都含有`return_code`和`return_msg`。
@@ -73,7 +74,11 @@ public class MyConfig implements WXPayConfig{
         return certBis;
     }
 
-    public int getTimeOutMs() {
+    public int getHttpConnectTimeoutMs() {
+        return 8000;
+    }
+
+    public int getHttpReadTimeoutMs() {
         return 10000;
     }
 }
