@@ -120,9 +120,9 @@ public class WXPay {
         OutputStream outputStream = httpURLConnection.getOutputStream();
         outputStream.write(reqBody.getBytes(UTF8));
 
-        if (httpURLConnection.getResponseCode()!= 200) {
-            throw new Exception("HTTP response code is not 200");
-        }
+        // if (httpURLConnection.getResponseCode()!= 200) {
+        //     throw new Exception(String.format("HTTP response code is %d, not 200", httpURLConnection.getResponseCode()));
+        // }
 
         //获取内容
         InputStream inputStream = httpURLConnection.getInputStream();
@@ -200,9 +200,9 @@ public class WXPay {
         OutputStream outputStream = httpURLConnection.getOutputStream();
         outputStream.write(reqBody.getBytes(UTF8));
 
-        if (httpURLConnection.getResponseCode()!= 200) {
-            throw new Exception("HTTP response code is not 200");
-        }
+        // if (httpURLConnection.getResponseCode()!= 200) {
+        //     throw new Exception(String.format("HTTP response code is %d, not 200", httpURLConnection.getResponseCode()));
+        // }
 
         //获取内容
         InputStream inputStream = httpURLConnection.getInputStream();
@@ -255,7 +255,6 @@ public class WXPay {
      * @throws Exception
      */
     public Map<String, String> processResponseXml(String xmlStr) throws Exception {
-        System.out.println(xmlStr);
         String RETURN_CODE = "return_code";
         String return_code;
         Map<String, String> respData = WXPayUtil.xmlToMap(xmlStr);
@@ -263,7 +262,7 @@ public class WXPay {
             return_code = respData.get(RETURN_CODE);
         }
         else {
-            throw new Exception("No `return_code` in the response XML reqData");
+            throw new Exception(String.format("No `return_code` in XML: %s", xmlStr));
         }
 
         if (return_code.equals(WXPayConstants.FAIL)) {
@@ -274,11 +273,11 @@ public class WXPay {
                return respData;
            }
            else {
-               throw new Exception("Invalid signature in XML");
+               throw new Exception(String.format("Invalid sign value in XML: %s", xmlStr));
            }
         }
         else {
-            throw new Exception("Invalid XML. return_code value " + return_code + " is invalid");
+            throw new Exception(String.format("return_code value %s is invalid in XML: %s", return_code, xmlStr));
         }
     }
 
