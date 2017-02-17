@@ -138,7 +138,7 @@ public class WXPayUtil {
     }
 
     /**
-     * 判断签名是否正确
+     * 判断签名是否正确，必须包含sign字段，否则返回false。使用MD5签名。
      *
      * @param data Map类型数据
      * @param key API密钥
@@ -150,10 +150,11 @@ public class WXPayUtil {
     }
 
     /**
-     * 判断签名是否正确
+     * 判断签名是否正确，必须包含sign字段，否则返回false。
      *
      * @param data Map类型数据
      * @param key API密钥
+     * @param signType 签名方式
      * @return 签名是否正确
      * @throws Exception
      */
@@ -177,10 +178,11 @@ public class WXPayUtil {
     }
 
     /**
-     * 生成签名. 注意，若含有sign_type字段，必须和signType参数保持一致
+     * 生成签名. 注意，若含有sign_type字段，必须和signType参数保持一致。
      *
      * @param data 待签名数据
      * @param key API密钥
+     * @param signType 签名方式
      * @return 签名
      */
     public static String generateSignature(final Map<String, String> data, String key, SignType signType) throws Exception {

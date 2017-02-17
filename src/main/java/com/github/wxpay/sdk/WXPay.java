@@ -30,13 +30,16 @@ public class WXPay {
         this.useSandbox = useSandbox;
     }
 
+
     /**
-     * 根据 Map 数据生成 HTTP POST 数据（XML格式）
+     * 向 Map 中添加 appid、mch_id、nonce_str、sign_type、sign </br>
+     * 该函数适用于商户适用于统一下单等接口，不适用于红包、代金券接口
      *
-     * @param reqData 向wxpay post的请求数据
-     * @return XML格式的请求数据
+     * @param reqData
+     * @return
+     * @throws Exception
      */
-    public String makeRequestBody(Map<String, String> reqData) throws Exception {
+    public Map<String, String> fillRequestData(Map<String, String> reqData) throws Exception {
         reqData.put("appid", config.getAppID());
         reqData.put("mch_id", config.getMchID());
         reqData.put("nonce_str", WXPayUtil.generateNonceStr());
@@ -46,21 +49,25 @@ public class WXPay {
         else if (SignType.HMACSHA256.equals(this.signType)) {
             reqData.put("sign_type", WXPayConstants.HMACSHA256);
         }
-        return WXPayUtil.generateSignedXml(reqData, config.getKey(), this.signType);
+        reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), this.signType));
+        return reqData;
     }
 
     /**
-     * 判断xml数据的sign是否有效
+     * 判断xml数据的sign是否有效，必须包含sign字段，否则返回false。
+     *
      * @param reqData 向wxpay post的请求数据
      * @return 签名是否有效
      * @throws Exception
      */
     public boolean isResponseSignatureValid(Map<String, String> reqData) throws Exception {
+        // 返回数据的签名方式和请求中给定的签名方式是一致的
         return WXPayUtil.isSignatureValid(reqData, this.config.getKey(), this.signType);
     }
 
     /**
-     * 判断xml数据的sign是否有效
+     * 判断支付结果通知中的sign是否有效
+     *
      * @param reqData 向wxpay post的请求数据
      * @return 签名是否有效
      * @throws Exception
@@ -102,7 +109,7 @@ public class WXPay {
     public String requestWithoutCert(String strUrl, Map<String, String> reqData,
                                      int connectTimeoutMs, int readTimeoutMs) throws Exception {
         String UTF8 = "UTF-8";
-        String reqBody = this.makeRequestBody(reqData);
+        String reqBody = WXPayUtil.mapToXml(reqData);
         URL httpUrl = new URL(strUrl);
         HttpURLConnection httpURLConnection = (HttpURLConnection) httpUrl.openConnection();
         httpURLConnection.setDoOutput(true);
@@ -167,7 +174,7 @@ public class WXPay {
     public String requestWithCert(String strUrl, Map<String, String> reqData,
                                   int connectTimeoutMs, int readTimeoutMs) throws Exception {
         String UTF8 = "UTF-8";
-        String reqBody = this.makeRequestBody(reqData);
+        String reqBody = WXPayUtil.mapToXml(reqData);
         URL httpUrl = new URL(strUrl);
         char[] password = config.getMchID().toCharArray();
         InputStream certStream = config.getCertStream();
@@ -242,7 +249,7 @@ public class WXPay {
     }
 
     /**
-     * 处理API返回数据，转换成Map对象。若有必要，验证签名。
+     * 处理 HTTPS API返回数据，转换成Map对象。return_code为SUCCESS时，验证签名。
      * @param xmlStr API返回的XML格式数据
      * @return Map类型数据
      * @throws Exception
@@ -304,7 +311,7 @@ public class WXPay {
         else {
             url = WXPayConstants.MICROPAY_URL;
         }
-        String respXml = this.requestWithoutCert(url, reqData, connectTimeoutMs, readTimeoutMs);
+        String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
 
@@ -338,7 +345,7 @@ public class WXPay {
         else {
             url = WXPayConstants.UNIFIEDORDER_URL;
         }
-        String respXml = this.requestWithoutCert(url, reqData, connectTimeoutMs, readTimeoutMs);
+        String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
 
@@ -372,7 +379,7 @@ public class WXPay {
         else {
             url = WXPayConstants.ORDERQUERY_URL;
         }
-        String respXml = this.requestWithoutCert(url, reqData, connectTimeoutMs, readTimeoutMs);
+        String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
 
@@ -407,7 +414,7 @@ public class WXPay {
         else {
             url = WXPayConstants.REVERSE_URL;
         }
-        String respXml = this.requestWithCert(url, reqData, connectTimeoutMs, readTimeoutMs);
+        String respXml = this.requestWithCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
 
@@ -441,7 +448,7 @@ public class WXPay {
         else {
             url = WXPayConstants.CLOSEORDER_URL;
         }
-        String respXml = this.requestWithoutCert(url, reqData, connectTimeoutMs, readTimeoutMs);
+        String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
 
@@ -476,7 +483,7 @@ public class WXPay {
         else {
             url = WXPayConstants.REFUND_URL;
         }
-        String respXml = this.requestWithCert(url, reqData, connectTimeoutMs, readTimeoutMs);
+        String respXml = this.requestWithCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
 
@@ -510,7 +517,7 @@ public class WXPay {
         else {
             url = WXPayConstants.REFUNDQUERY_URL;
         }
-        String respXml = this.requestWithoutCert(url, reqData, connectTimeoutMs, readTimeoutMs);
+        String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
 
@@ -546,7 +553,7 @@ public class WXPay {
         else {
             url = WXPayConstants.DOWNLOADBILL_URL;
         }
-        String respStr = this.requestWithoutCert(url, reqData, connectTimeoutMs, readTimeoutMs).trim();
+        String respStr = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs).trim();
         Map<String, String> ret;
         // 出现错误，返回XML数据
         if (respStr.indexOf("<") == 0) {
@@ -592,7 +599,7 @@ public class WXPay {
         else {
             url = WXPayConstants.REPORT_URL;
         }
-        String respXml = this.requestWithoutCert(url, reqData, connectTimeoutMs, readTimeoutMs);
+        String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
 
@@ -624,7 +631,7 @@ public class WXPay {
         else {
             url = WXPayConstants.SHORTURL_URL;
         }
-        String respXml = this.requestWithoutCert(url, reqData, connectTimeoutMs, readTimeoutMs);
+        String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
 
@@ -658,7 +665,7 @@ public class WXPay {
         else {
             url = WXPayConstants.AUTHCODETOOPENID_URL;
         }
-        String respXml = this.requestWithoutCert(url, reqData, connectTimeoutMs, readTimeoutMs);
+        String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);
     }
 
