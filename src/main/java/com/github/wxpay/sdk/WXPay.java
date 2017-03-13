@@ -599,7 +599,7 @@ public class WXPay {
             url = WXPayConstants.REPORT_URL;
         }
         String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
-        return this.processResponseXml(respXml);
+        return WXPayUtil.xmlToMap(respXml);
     }
 
 

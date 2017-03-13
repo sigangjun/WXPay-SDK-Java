@@ -25,7 +25,7 @@ public class WXPayConstants {
     public static final String REFUND_URL       = "https://api.mch.weixin.qq.com/secapi/pay/refund";
     public static final String REFUNDQUERY_URL  = "https://api.mch.weixin.qq.com/pay/refundquery";
     public static final String DOWNLOADBILL_URL = "https://api.mch.weixin.qq.com/pay/downloadbill";
-    public static final String REPORT_URL       = "https://api.mch.weixin.qq.com/pay/report";
+    public static final String REPORT_URL       = "https://api.mch.weixin.qq.com/payitil/report";
     public static final String SHORTURL_URL     = "https://api.mch.weixin.qq.com/tools/shorturl";
     public static final String AUTHCODETOOPENID_URL = "https://api.mch.weixin.qq.com/tools/authcodetoopenid";
 
@@ -38,7 +38,7 @@ public class WXPayConstants {
     public static final String SANDBOX_REFUND_URL       = "https://api.mch.weixin.qq.com/sandboxnew/secapi/pay/refund";
     public static final String SANDBOX_REFUNDQUERY_URL  = "https://api.mch.weixin.qq.com/sandboxnew/pay/refundquery";
     public static final String SANDBOX_DOWNLOADBILL_URL = "https://api.mch.weixin.qq.com/sandboxnew/pay/downloadbill";
-    public static final String SANDBOX_REPORT_URL       = "https://api.mch.weixin.qq.com/sandboxnew/pay/report";
+    public static final String SANDBOX_REPORT_URL       = "https://api.mch.weixin.qq.com/sandboxnew/payitil/report";
     public static final String SANDBOX_SHORTURL_URL     = "https://api.mch.weixin.qq.com/sandboxnew/tools/shorturl";
     public static final String SANDBOX_AUTHCODETOOPENID_URL = "https://api.mch.weixin.qq.com/sandboxnew/tools/authcodetoopenid";
 
