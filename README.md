@@ -302,9 +302,5 @@ public class WXPayExample {
 }
 ```
 
-## Java Doc
-
-https://wxpay.github.io/sdk/javadoc/
-
 ## License
 BSD
