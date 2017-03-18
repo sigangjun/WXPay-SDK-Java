@@ -32,7 +32,7 @@ maven:
 <dependency>
     <groupId>com.github.wxpay</groupId>
     <artifactId>wxpay-sdk</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
 ```
 
