@@ -27,14 +27,44 @@ com.github.wxpay.sdk.WXPay类下提供了对应的方法：
 
 
 ## 安装
-maven:
+### Maven
+添加仓库地址：
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
 ```
+
+添加依赖：
+```xml
 <dependency>
     <groupId>com.github.wxpay</groupId>
-    <artifactId>wxpay-sdk</artifactId>
-    <version>0.0.3</version>
+    <artifactId>WXPay-SDK-Java</artifactId>
+    <version>0.0.4</version>
 </dependency>
 ```
+
+### Gradle
+添加仓库地址：
+```
+allprojects {
+    repositories {
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+添加依赖：
+```
+dependencies {
+    compile 'com.github.wxpay:WXPay-SDK-Java:0.0.4'
+}
+```
+
+
 
 ## 示例
 配置类MyConfig:

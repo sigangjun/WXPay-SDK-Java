@@ -130,7 +130,7 @@ public class WXPay {
         final StringBuffer stringBuffer = new StringBuffer();
         String line = null;
         while ((line = bufferedReader.readLine()) != null) {
-            stringBuffer.append(line);
+            stringBuffer.append(line).append("\n");
         }
         String resp = stringBuffer.toString();
         if (stringBuffer!=null) {
